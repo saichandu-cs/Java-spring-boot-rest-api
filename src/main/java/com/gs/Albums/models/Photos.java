@@ -37,4 +37,5 @@ public class Photos {
     private Albums albums;
 
     private Long albumId;
+
 }
