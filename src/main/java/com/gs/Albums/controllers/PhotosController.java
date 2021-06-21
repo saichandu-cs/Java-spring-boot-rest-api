@@ -34,4 +34,6 @@ public class PhotosController {
 
     @GetMapping("/photos/{id}")
     public Optional getAlbumByPhotoIds(@PathVariable (value = "id") Long id) { return photoService.getAlbumByPhotoId(id); }
+
+
 }
