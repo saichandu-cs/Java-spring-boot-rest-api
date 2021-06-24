@@ -5,6 +5,7 @@ import com.gs.Albums.services.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +15,14 @@ public class AlbumController {
     private AlbumService albumService;
 
     @GetMapping("/albums")
-    public Page<Albums> getAlbums(Pageable pageable) { return albumService.getAllAlbums(pageable); }
+    public Page<Albums> getAlbums(Pageable pageable) { return albumService.getAllAlbums(pageable);
 
+    }
+    @GetMapping("/albumsby2/{aid}")
+    public Albums get2(@PathVariable (value = "aid") Long aid,@Param(value = "atitle") String atitle)
+    {
+        return albumService.getbytitleanduserid(aid,atitle);
+    }
     @PostMapping("/albums")
     public Albums addAlbums(@RequestBody Albums albums) { return albumService.addAlbum(albums); }
 

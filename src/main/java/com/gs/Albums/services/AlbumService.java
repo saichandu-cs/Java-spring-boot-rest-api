@@ -18,21 +18,25 @@ import java.util.Optional;
 @Slf4j
 public class AlbumService {
 
-    @Autowired
-    private  AlbumRepository albumRepository;
 
-        public Page<Albums> getAllAlbums(Pageable pageable) {
+    private  final  AlbumRepository albumRepository;
+    @Autowired
+    public AlbumService(AlbumRepository albumRepository) {
+        this.albumRepository = albumRepository;
+    }
+
+    public Page<Albums> getAllAlbums(Pageable pageable) {
             log.info("In getAllAlbums method");
-            return albumRepository.findAll(pageable);
+            return albumRepository.findAlbumUserId1(pageable);
         }
 
-        public Albums addAlbum(@RequestBody Albums albums)
+        public Albums addAlbum(Albums albums)
         {
             log.info("In AddAlbum Method");
             return albumRepository.save(albums);
         }
 
-        public Albums editAlbum(@PathVariable(value = "albumId") Long albumId,@RequestBody Albums body)
+        public Albums editAlbum(Long albumId, Albums body)
         {
             log.info("In editAlbum method");
             Optional<Albums> albumRepositoryById = albumRepository.findById(albumId);
@@ -57,7 +61,7 @@ public class AlbumService {
 //            }).orElseThrow(()->new RuntimeException("Album not found with Id"+albumId));
         }
 
-        public ResponseEntity<?> DeleteAlbum(@PathVariable(value = "albumId") Long albumId)
+        public ResponseEntity<?> DeleteAlbum(Long albumId)
         {
             log.info("in DeleteAlbum Method");
             return albumRepository.findById(albumId).map(album -> {
@@ -67,11 +71,18 @@ public class AlbumService {
         }
 
 
+    public Albums getbytitleanduserid(Long userid,String title)
+    {
+        return  albumRepository.findByTitleAndUserId(title,userid);
+    }
+
+
         public void saves(List<Albums> albums)
         {
-            for(Albums a:albums) {
-                albumRepository.save(a);
-            }
+//            for(Albums a:albums) {
+//                albumRepository.save(a);
+//            }
+            albumRepository.saveAll(albums);
         }
 //    @PutMapping("/albums/{albumId}")
 //    public Albums editAlbum(@PathVariable(value = "albumId") Long albumId,@RequestBody Albums body)

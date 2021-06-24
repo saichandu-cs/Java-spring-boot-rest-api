@@ -33,13 +33,13 @@ public class PhotoService {
             return photosRepository.findAll(pageable);
         }
 
-        public Page<Photos> getPhotosByAlbumId(@PathVariable(value = "albumId") Long albumId)
+        public Page<Photos> getPhotosByAlbumId(Long albumId)
         {
             log.info("in getphotbyAlbumId method");
             return photosRepository.findByAlbumId(albumId,Pageable.unpaged());
         }
 
-        public Optional getPhotosByAlbumId(@PathVariable (value = "albumId") Long albumId, @PathVariable (value = "photoId") Long photoId)
+        public Optional getPhotosByAlbumId(Long albumId,Long photoId)
         {
 
             log.info("in getPHOTOBYID AND ALBUMID");
@@ -47,12 +47,12 @@ public class PhotoService {
             return photosRepository.findByIdAndAlbumId(albumId,photoId);
         }
 
-        public Photos AddPhoto(@PathVariable (value = "albumId") Long albumId, @RequestBody Photos photos)
+        public Photos AddPhoto(Long albumId, Photos photos)
         {
             log.info("in Add Photo Method");
             return albumRepository.findById(albumId).map(album -> {
                 photos.setAlbums(album);
-                //photos.setAlbumId(albumId);
+                photos.setAlbumId(albumId);
                 return photosRepository.save(photos);
             }).orElseThrow(()-> new ResouceNotFoundException("No Album exists with the Id:"+albumId));
 
@@ -64,7 +64,7 @@ public class PhotoService {
 
         }
 
-        public Photos EditPhoto(@PathVariable (value = "albumId") Long albumId,@PathVariable (value = "photoId") Long photoId,@Validated @RequestBody Photos photos)
+        public Photos EditPhoto(Long albumId, Long photoId, Photos photos)
         {
             log.info("in EditPhoto method");
             return photosRepository.findById(photoId).map(photos1 -> {
@@ -75,7 +75,7 @@ public class PhotoService {
             }).orElseThrow(()-> new RuntimeException("no photo exists with that id"));
         }
 
-        public ResponseEntity<?> DeletePhoto(@PathVariable (value = "albumId") Long albumId, @PathVariable (value = "photoId") Long photoId)
+        public ResponseEntity<?> DeletePhoto(Long albumId, Long photoId)
         {
             log.info("in Delete Photo method");
             return photosRepository.findByIdAndAlbumId(albumId, photoId).map(photos1 -> {
@@ -85,7 +85,7 @@ public class PhotoService {
         }
 //should come deleted successfully
 
-        public Optional getAlbumByPhotoId(@PathVariable (value = "id") Long id)
+        public Optional getAlbumByPhotoId(Long id)
         {
             log.info("in getAlbumByPhotoId method");
             return photosRepository.findById(id).map(photos -> {
@@ -94,9 +94,9 @@ public class PhotoService {
         }
     public void saves(List<Photos> photos)
     {
-        for(Photos a:photos) {
-            photosRepository.save(a);
-        }
+        photosRepository.saveAll(photos);
     }
+
+
 
 }
