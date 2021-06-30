@@ -16,6 +16,6 @@ public class Albums {
 
     private Long userId;
 
-    @Column(unique = true)
+    //@Column(unique = true)
     private String title;
 }
